@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>NGINX Learning</title>
+    <style>
+        body { font-family: system-ui; background: #0f0f23; color: #e0e0e0; padding: 2rem; }
+        h1 { color: #7b2ff7; }
+        h2 { color: #3b82f6; margin-top: 1.5rem; }
+        .endpoint { padding: 0.5rem; margin: 0.3rem 0; background: #1a1a2e; border-radius: 6px; font-family: monospace; }
+        .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; margin-left: 8px; }
+        .lb { background: #22c55e20; color: #22c55e; }
+    </style>
+</head>
+<body>
+    <h1>🚀 NGINX Learning Project (v2)</h1>
+    <p>3 services × 2 instances = 6 backends behind NGINX</p>
+
+    <h2>📡 API Service (/api) <span class="tag lb">Load Balanced × 2</span></h2>
+    <div class="endpoint">GET  /api/posts</div>
+    <div class="endpoint">POST /api/posts</div>
+    <div class="endpoint">GET  /api/users</div>
+    <div class="endpoint">GET  /api/users/1</div>
+    <div class="endpoint">GET  /api/health</div>
+    <div class="endpoint">GET  /api/slow</div>
+
+    <h2>🔐 Auth Service (/auth) <span class="tag lb">Load Balanced × 2</span></h2>
+    <div class="endpoint">POST /auth/login</div>
+    <div class="endpoint">POST /auth/register</div>
+    <div class="endpoint">GET  /auth/profile</div>
+    <div class="endpoint">GET  /auth/health</div>
+
+    <h2>📰 Feed Service (/feed) <span class="tag lb">Load Balanced × 2</span></h2>
+    <div class="endpoint">GET  /feed/</div>
+    <div class="endpoint">GET  /feed/trending</div>
+    <div class="endpoint">GET  /feed/health</div>
+
+    <h2>⚙️ NGINX</h2>
+    <div class="endpoint">GET  /health</div>
+</body>
+</html>
