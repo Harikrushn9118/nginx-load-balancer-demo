@@ -29,6 +29,8 @@ services:
       - INSTANCE_ID=1
     expose:
       - "3000"
+    volumes:
+      - shared-data:/app/data
     restart: unless-stopped
     networks:
       - app-network
@@ -40,6 +42,8 @@ services:
       - INSTANCE_ID=2
     expose:
       - "3000"
+    volumes:
+      - shared-data:/app/data
     restart: unless-stopped
     networks:
       - app-network
@@ -51,6 +55,8 @@ services:
       - INSTANCE_ID=3
     expose:
       - "3000"
+    volumes:
+      - shared-data:/app/data
     restart: unless-stopped
     networks:
       - app-network
@@ -62,6 +68,8 @@ services:
       - INSTANCE_ID=4
     expose:
       - "3000"
+    volumes:
+      - shared-data:/app/data
     restart: unless-stopped
     networks:
       - app-network
@@ -73,6 +81,8 @@ services:
       - INSTANCE_ID=5
     expose:
       - "3000"
+    volumes:
+      - shared-data:/app/data
     restart: unless-stopped
     networks:
       - app-network
@@ -84,6 +94,8 @@ services:
       - INSTANCE_ID=6
     expose:
       - "3000"
+    volumes:
+      - shared-data:/app/data
     restart: unless-stopped
     networks:
       - app-network
@@ -95,6 +107,8 @@ services:
       - INSTANCE_ID=1
     expose:
       - "3000"
+    volumes:
+      - shared-data:/app/data
     restart: unless-stopped
     networks:
       - app-network
@@ -106,6 +120,8 @@ services:
       - INSTANCE_ID=2
     expose:
       - "3000"
+    volumes:
+      - shared-data:/app/data
     restart: unless-stopped
     networks:
       - app-network
@@ -117,6 +133,8 @@ services:
       - INSTANCE_ID=3
     expose:
       - "3000"
+    volumes:
+      - shared-data:/app/data
     restart: unless-stopped
     networks:
       - app-network
@@ -124,3 +142,6 @@ services:
 networks:
   app-network:
     driver: bridge
+
+volumes:
+  shared-data:

@@ -2,40 +2,194 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>NGINX Learning</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: system-ui; background: #0f0f23; color: #e0e0e0; padding: 2rem; }
-        h1 { color: #7b2ff7; }
-        h2 { color: #3b82f6; margin-top: 1.5rem; }
-        .endpoint { padding: 0.5rem; margin: 0.3rem 0; background: #1a1a2e; border-radius: 6px; font-family: monospace; }
-        .tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; margin-left: 8px; }
-        .lb { background: #22c55e20; color: #22c55e; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #f4f4f5; color: #18181b; }
+        
+        /* NAVBAR */
+        nav { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            background: white; 
+            padding: 16px 24px; 
+            border-bottom: 1px solid #e4e4e7; 
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: relative;
+            z-index: 10;
+        }
+
+        .nav-left { font-size: 20px; font-weight: 700; color: #09090b; width: 200px; }
+        
+        .nav-center { display: flex; flex: 1; justify-content: center; max-width: 500px; margin: 0 auto; gap: 8px; }
+        .nav-center input { width: 100%; padding: 10px 16px; border: 1px solid #d4d4d8; border-radius: 20px; font-family: 'Inter'; font-size: 14px; outline: none; }
+        .nav-center input:focus { border-color: #3b82f6; }
+        .nav-center button { padding: 10px 20px; background: #3b82f6; color: white; border: none; border-radius: 20px; cursor: pointer; font-weight: 600; font-family: 'Inter'; transition: 0.2s; }
+        .nav-center button:hover { background: #2563eb; }
+
+        .nav-right { width: 200px; display: flex; justify-content: flex-end; }
+        .nav-right button { padding: 10px 20px; background: #18181b; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-family: 'Inter'; transition: 0.2s; }
+        .nav-right button:hover { background: #27272a; }
+
+        /* CONTENT */
+        .content { max-width: 800px; margin: 40px auto; padding: 20px; position: relative; z-index: 1; }
+        
+        /* MODAL OVERLAY */
+        #overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(4px);
+            z-index: 100;
+        }
+
+        /* REGISTER FORM (Modal) */
+        #register-modal { 
+            display: none; 
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: white; 
+            padding: 32px; 
+            border-radius: 12px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2); 
+            width: 100%;
+            max-width: 400px; 
+            z-index: 101;
+        }
+        #register-modal h2 { margin-bottom: 20px; }
+        #register-modal input { width: 100%; padding: 12px; border: 1px solid #e4e4e7; border-radius: 8px; margin-bottom: 16px; font-family: 'Inter'; font-size: 14px; outline: none; }
+        
+        .modal-actions { display: flex; gap: 12px; }
+        .modal-actions button { flex: 1; padding: 12px; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; }
+        .btn-submit { background: #eab308; color: white; }
+        .btn-submit:hover { background: #ca8a04; }
+        .btn-cancel { background: #e4e4e7; color: #3f3f46; }
+        .btn-cancel:hover { background: #d4d4d8; }
+
+        /* RESULT BOX */
+        .result { margin-top: 20px; padding: 16px; border-radius: 8px; font-size: 14px; font-weight: 500; display: none; text-align: center; }
+        .result.active { display: block; }
+        .result-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+        .result-error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+        .served-by { margin-top: 8px; font-size: 12px; color: #a1a1aa; font-family: monospace; display: block; }
     </style>
 </head>
 <body>
-    <h1>🚀 NGINX Learning Project (v2)</h1>
-    <p>3 services × 2 instances = 6 backends behind NGINX</p>
 
-    <h2>📡 API Service (/api) <span class="tag lb">Load Balanced × 2</span></h2>
-    <div class="endpoint">GET  /api/posts</div>
-    <div class="endpoint">POST /api/posts</div>
-    <div class="endpoint">GET  /api/users</div>
-    <div class="endpoint">GET  /api/users/1</div>
-    <div class="endpoint">GET  /api/health</div>
-    <div class="endpoint">GET  /api/slow</div>
+    <!-- TOP NAVBAR -->
+    <nav>
+        <div class="nav-left">Home</div>
+        
+        <div class="nav-center">
+            <input type="text" id="search-input" placeholder="Search username...">
+            <button onclick="search()">Search</button>
+        </div>
+        
+        <div class="nav-right">
+            <button onclick="showRegister()">Register</button>
+        </div>
+    </nav>
 
-    <h2>🔐 Auth Service (/auth) <span class="tag lb">Load Balanced × 2</span></h2>
-    <div class="endpoint">POST /auth/login</div>
-    <div class="endpoint">POST /auth/register</div>
-    <div class="endpoint">GET  /auth/profile</div>
-    <div class="endpoint">GET  /auth/health</div>
+    <!-- MAIN CONTENT AREA -->
+    <div class="content">
+        <!-- NOTIFICATIONS / RESULTS (For Search) -->
+        <div id="result-box" class="result"></div>
+        <div id="served-by" class="served-by" style="text-align: center; display: none;"></div>
+    </div>
 
-    <h2>📰 Feed Service (/feed) <span class="tag lb">Load Balanced × 2</span></h2>
-    <div class="endpoint">GET  /feed/</div>
-    <div class="endpoint">GET  /feed/trending</div>
-    <div class="endpoint">GET  /feed/health</div>
+    <!-- MODAL BACKGROUND OVERLAY -->
+    <div id="overlay" onclick="hideRegister()"></div>
 
-    <h2>⚙️ NGINX</h2>
-    <div class="endpoint">GET  /health</div>
+    <!-- REGISTER MODAL -->
+    <div id="register-modal">
+        <h2>Register</h2>
+        <input type="text" id="reg-name" placeholder="Name">
+        <input type="password" id="reg-pass" placeholder="Password">
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="hideRegister()">Cancel</button>
+            <button class="btn-submit" onclick="register()">Submit</button>
+        </div>
+        <!-- Register specific result box -->
+        <div id="reg-result" class="result" style="margin-top: 16px;"></div>
+    </div>
+
+    <script>
+        function showRegister() {
+            document.getElementById('overlay').style.display = 'block';
+            document.getElementById('register-modal').style.display = 'block';
+            document.getElementById('reg-result').style.display = 'none';
+        }
+
+        function hideRegister() {
+            document.getElementById('overlay').style.display = 'none';
+            document.getElementById('register-modal').style.display = 'none';
+            document.getElementById('reg-name').value = '';
+            document.getElementById('reg-pass').value = '';
+        }
+
+        async function register() {
+            const username = document.getElementById('reg-name').value;
+            const password = document.getElementById('reg-pass').value;
+            const resBox = document.getElementById('reg-result');
+            const mainResBox = document.getElementById('result-box');
+            const servedBox = document.getElementById('served-by');
+            
+            if (!username || !password) return;
+
+            try {
+                const resp = await fetch('/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                const data = await resp.json();
+                
+                // If already exists, show error inside the modal so they can fix it
+                if(data.message === 'already exists') {
+                    resBox.style.display = 'block';
+                    resBox.className = 'result result-error';
+                    resBox.textContent = data.message;
+                } else {
+                    // Success! Close modal and show success on main screen
+                    hideRegister();
+                    mainResBox.className = 'result active result-success';
+                    mainResBox.textContent = data.message;
+                    servedBox.style.display = 'block';
+                    servedBox.textContent = `Handled by: auth-${data.instance}`;
+                }
+            } catch (e) {
+                resBox.style.display = 'block';
+                resBox.className = 'result result-error';
+                resBox.textContent = 'Error connecting to server';
+            }
+        }
+
+        async function search() {
+            const username = document.getElementById('search-input').value;
+            const resBox = document.getElementById('result-box');
+            const servedBox = document.getElementById('served-by');
+            
+            if (!username) return;
+
+            try {
+                const resp = await fetch(`/api/search?username=${encodeURIComponent(username)}`);
+                const data = await resp.json();
+                
+                resBox.className = 'result active ' + (data.message === 'not find this' ? 'result-error' : 'result-success');
+                resBox.textContent = data.message;
+                
+                servedBox.style.display = 'block';
+                servedBox.textContent = `Handled by: backend-${data.instance}`;
+            } catch (e) {
+                resBox.className = 'result active result-error';
+                resBox.textContent = 'Error connecting to server';
+            }
+        }
+    </script>
 </body>
 </html>
